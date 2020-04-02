@@ -1,0 +1,7 @@
+---
+- name: Enable php7-fpm
+  become: yes
+  systemd:
+    name: php7.2-fpm.service
+    enabled: yes
+  listen: enable php

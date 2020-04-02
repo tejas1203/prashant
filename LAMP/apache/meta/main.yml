@@ -1,0 +1,25 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Tejasvi Rana
+  description: Apache 2.x for Linux.
+  company: "Opstree Solutions"
+  min_ansible_version: 2.4
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Amazon
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+  galaxy_tags:
+    - web
+    - apache
+    - webserver
+    - html
+    - httpd

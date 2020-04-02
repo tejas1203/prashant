@@ -1,0 +1,47 @@
+---
+- name: Configure Apache.
+  lineinfile:
+    dest: "{{ apache_server_root }}/ports.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items: "{{ apache_ports_configuration_items }}"
+  notify: restart apache
+  become: yes
+
+- name: Enable Apache mods.
+  file:
+    src: "{{ apache_server_root }}/mods-available/{{ item }}"
+    dest: "{{ apache_server_root }}/mods-enabled/{{ item }}"
+    state: link
+  with_items: "{{ apache_mods_enabled }}"
+  notify: restart apache
+  become: yes
+
+- name: Add apache vhosts configuration.
+  template:
+    src: vhost.conf.j2
+    dest: "{{ apache_conf_path }}/sites-available/{{ server_name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart apache
+  when: apache_create_vhosts
+  become: yes
+
+- name: Add vhost symlink in sites-enabled.
+  file:
+    src: "{{ apache_conf_path }}/sites-available/{{ server_name }}.conf"
+    dest: "{{ apache_conf_path }}/sites-enabled/{{ server_name }}.conf"
+    state: link
+  notify: restart apache
+  when: apache_create_vhosts
+  become: yes
+
+- name: Remove default vhost in sites-enabled.
+  file:
+    path: "{{ apache_conf_path }}/sites-enabled/{{ apache_default_vhost_filename }}"
+    state: absent
+  notify: restart apache
+  when: apache_remove_default_vhost
+  become: yes

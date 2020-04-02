@@ -1,0 +1,19 @@
+<VirtualHost *:8080>
+
+    ServerName "{{ server_name }}.chqbook.com"
+    DocumentRoot "/var/www/{{ doc_root }}"
+    ErrorLog {{ server_name }}-error_log
+    CustomLog {{ server_name }}-access_log common
+
+    <Directory "/var/www/{{ doc_root }}">
+    	Options Indexes FollowSymLinks
+    	AllowOverride None
+    	Order allow,deny
+    	Allow from all
+	RewriteEngine on
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . index.html [L]
+    </Directory>
+
+</VirtualHost>
